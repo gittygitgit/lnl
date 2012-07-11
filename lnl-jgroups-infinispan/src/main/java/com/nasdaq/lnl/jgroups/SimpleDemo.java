@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 import org.jgroups.View;
+
+import com.nasdaq.lnl.domain.Quote;
 
 public class SimpleDemo {
 
@@ -37,7 +36,6 @@ public class SimpleDemo {
 		ch.setReceiver(new SimpleReceiver());
 		ch.setDiscardOwnMessages(true);
 		ch.connect("test");
-	
 
 		loop();
 	}
@@ -52,9 +50,8 @@ public class SimpleDemo {
 			case 'P':
 				msgTypeTokenizer = new StringTokenizer(userInput.substring(2), " ");
 				String und = msgTypeTokenizer.nextToken();
-				bbo.put(und,
-						new Quote(und, new BigDecimal(msgTypeTokenizer.nextToken()), new BigDecimal(msgTypeTokenizer
-								.nextToken())));
+				bbo.put(und, new Quote(und, new BigDecimal(msgTypeTokenizer.nextToken()),
+						new BigDecimal(msgTypeTokenizer.nextToken())));
 				ch.send(new Message(null, (userInput).getBytes()));
 				break;
 			case 'G':
@@ -87,13 +84,13 @@ public class SimpleDemo {
 				System.out.println("Received message: [msg=" + new String(msg.getBuffer()) + "]");
 				st = new StringTokenizer(new String(msg.getBuffer()).substring(2), " ");
 				String und = st.nextToken();
-System.out.println(und);
+				System.out.println(und);
 				bbo.put(und,
 						new Quote(und, new BigDecimal(st.nextToken()), new BigDecimal(st
 								.nextToken())));
 				break;
 			default:
-//				System.out.println(new String(msg.getBuffer()));
+				// System.out.println(new String(msg.getBuffer()));
 			}
 		}
 
@@ -103,44 +100,4 @@ System.out.println(und);
 		}
 	}
 
-	private class Quote {
-		String und;
-		BigDecimal bid;
-		BigDecimal ask;
-
-		public Quote(String und, BigDecimal bid, BigDecimal ask) {
-			super();
-			this.und = und;
-			this.bid = bid;
-			this.ask = ask;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder(17, 37).append(this.bid).append(this.ask).append(this.und)
-					.toHashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			Quote rhs = (Quote) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj)).append(bid, rhs.bid)
-					.append(ask, rhs.ask).append(und, rhs.und).isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this).append("und", und).append("bid", bid)
-					.append("ask", ask).toString();
-		}
-	}
 }
