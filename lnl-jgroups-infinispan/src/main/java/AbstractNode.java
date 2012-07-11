@@ -28,13 +28,13 @@ public abstract class AbstractNode {
 	private final EmbeddedCacheManager cacheManager;
 
 	public AbstractNode() {
-		this.cacheManager = createCacheManagerProgramatically();
+//		this.cacheManager = createCacheManagerProgramatically();
 		// Uncomment to create cache from XML
-		// try {
-		// this.cacheManager = createCacheManagerFromXml();
-		// } catch (IOException e) {
-		// throw new RuntimeException(e);
-		// }
+		try {
+			this.cacheManager = createCacheManagerFromXml();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+ }
 	}
 
 	protected EmbeddedCacheManager getCacheManager() {

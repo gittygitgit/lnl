@@ -23,16 +23,14 @@
 
 
 import java.io.IOException;
-
 import org.infinispan.Cache;
-
 
 public class Node1 extends AbstractNode {
 
    public static void main(String[] args) throws Exception {
       new Node1().run();
    }
-   
+
    public void run() throws IOException, InterruptedException {
       Cache<String, String> cache = getCacheManager().getCache("Demo");
 
@@ -42,7 +40,7 @@ public class Node1 extends AbstractNode {
 
       inputCache(cache, 1000);
    } 
-   
+
    @Override
    protected int getNodeId() {
       return 0;
